@@ -1,29 +1,43 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[11]:
+# In[ ]:
 
 
 import pandas as pd
 import numpy as np
 
 
-# In[12]:
+# In[ ]:
 
 
 # save filepath to variable for easier access
 forecast_path = pd.read_csv(r'C:\Users\User\OneDrive\Pulpit\zadanie rekrutacyjne\jena_climate_2009_2016.csv')
 
 
-# In[20]:
+# In[ ]:
 
 
 # read the data and store data in DataFrame titled prognoza_data
 forecast_data = forecast_path
 
+forecast_data.info();
 
 
-# In[26]:
+# In[ ]:
+
+
+#Date Time ma NIEODPOWIEDNI format, należy go zrzutować na format daty
+from datetime import datetime, timedelta
+from pandas import DataFrame
+
+forecast_data['Date Time'] = pd.to_datetime(forecast_data['Date Time'],unit='ns')
+
+# Podgląd wskazuje, że rzutowanie przebiegło pomyślnie
+print(forecast_data['Date Time'])
+
+
+# In[ ]:
 
 
 #sprawdzanie czy nie ma brakujących danych
@@ -36,30 +50,36 @@ missing_values_count[0:len(forecast_data.columns)]
 # In[ ]:
 
 
+
+
+
+# In[ ]:
+
+
 #jak widać nie ma brakujących danych, więc nie jest konieczne uzupełnianie zmiennymi bądź usuwanie danych z pliku
 
 
-# In[19]:
+# In[ ]:
 
 
 # Tworzenie opisu danych
 forecast_data.describe()
 
 
-# In[15]:
+# In[ ]:
 
 
 # Interpretacja Danych
 # Resultatem describe() jest pokazanie ośmiu liczb dla każdej z oryginalnych kolumn.
 
 
-# In[16]:
+# In[ ]:
 
 
 forecast_data.columns
 
 
-# In[17]:
+# In[ ]:
 
 
 # Plik posiada 16 kolumn które przechowują różne wartości fizyczne, niekonieczne niezbędne do stworzenia modelu prognozy pogody
@@ -72,13 +92,13 @@ forecast_data.columns
 # Takie dane nie są potrzebne do wyznaczonego modelu, zatem zostaną usunięte.
 
 
-# In[35]:
+# In[ ]:
 
 
 forecast_data.drop('Tpot (K)', axis='columns',inplace=True) 
 
 
-# In[36]:
+# In[19]:
 
 
 # Następnie usuwam dane które mają wysoką kardynalność
@@ -90,13 +110,13 @@ forecast_data.drop(columns=['Date Time', 'p (mbar)', 'T (degC)', 'Tdew (degC)','
        'wd (deg)'], axis=1)
 
 
-# In[ ]:
+# In[20]:
 
 
 # Tak przygotowane dane można użyć do stworzenia modelu prognozy pogody
 
 
-# In[55]:
+# In[21]:
 
 
 # Ustalanie Targetu
@@ -111,7 +131,7 @@ X = forecast_data[['Date Time', 'p (mbar)', 'T (degC)', 'Tdew (degC)','rh (%)',
        'wd (deg)']]
 
 
-# In[59]:
+# In[22]:
 
 
 # import Split Data do dokładniejszego treningu
@@ -121,7 +141,7 @@ from sklearn.model_selection import train_test_split
 train_X, val_X, train_y, val_y = train_test_split(X, y,random_state = 0)
 
 
-# In[60]:
+# In[23]:
 
 
 # import Modelu Random Forest Regressor 
@@ -130,7 +150,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 
 
-# In[61]:
+# In[18]:
 
 
 #Tworzenie modelu
